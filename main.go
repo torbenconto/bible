@@ -86,7 +86,7 @@ func main() {
 				verses := bible.ParseVerse(targetVerse)
 
 				for _, verse := range verses {
-					fmt.Println(verse.Name, verse.Text, " | ", version)
+					fmt.Println(verse.Name, verse.Text, "|", version)
 				}
 			}
 		}
