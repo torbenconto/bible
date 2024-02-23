@@ -10,30 +10,12 @@ import (
 	"unicode"
 )
 
-type Book struct {
-	Name   string
-	Verses []Verse
-}
-
-func NewBook(name string, verses []Verse) *Book {
-	return &Book{name, verses}
-}
-
-type Verse struct {
-	Name string
-	Text string
-}
-
-func NewVerse(name, text string) *Verse {
-	return &Verse{name, text}
-}
-
 func init() {
 	InitDotBible()
 }
 
 func main() {
-	var bible []Book
+	var bible = NewBible(KJV)
 
 	// Home dir
 	home, err := os.UserHomeDir()
@@ -46,7 +28,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	bible = ParseBible(file)
+	bible.ParseSourceFile(file)
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
@@ -67,7 +49,7 @@ func main() {
 			verse := strings.Join(targetVerse, " ")
 
 			// Find the book
-			for _, book := range bible {
+			for _, book := range bible.Books {
 				if book.Name == bookName {
 					// Find the verse
 					for _, v := range book.Verses {
@@ -95,14 +77,14 @@ func main() {
 					log.Fatal(err)
 				}
 
-				for _, b := range bible {
+				for _, b := range bible.Books {
 					if b.Name == bookName {
 						book = b
 						break
 					}
 				}
 			} else {
-				book = bible[rand.Intn(len(bible))]
+				book = bible.Books[rand.Intn(len(bible.Books))]
 			}
 
 			verse := book.Verses[rand.Intn(len(book.Verses))]

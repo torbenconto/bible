@@ -33,17 +33,17 @@ func InitDotBible() {
 
 			for _, v := range versions {
 				// Create baseDir/versions/{version.name}
-				versionDir := filepath.Join(versionsDir, v.name)
+				versionDir := filepath.Join(versionsDir, v.Name)
 				os.Mkdir(versionDir, 0755)
 
 				// Download the version
-				resp, err := http.Get(v.url)
+				resp, err := http.Get(v.Url)
 				if err != nil {
 					log.Fatal(err)
 				}
 
-				split := strings.Split(v.url, ".")
-				name := filepath.Join(versionDir, v.name+"."+split[len(split)-1])
+				split := strings.Split(v.Url, ".")
+				name := filepath.Join(versionDir, v.Name+"."+split[len(split)-1])
 				file, err := os.Create(name)
 				if err != nil {
 					log.Fatal(err)
