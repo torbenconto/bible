@@ -71,7 +71,7 @@ func main() {
 					// Find the verse
 					for _, v := range book.Verses {
 						if v.Name == bookName+" "+verse {
-							fmt.Println(v.Text)
+							fmt.Println(v.Name, v.Text)
 							return
 						}
 					}
