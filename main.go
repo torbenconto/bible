@@ -7,7 +7,6 @@ import (
 	"math/rand"
 	"os"
 	"strings"
-	"unicode"
 )
 
 var versionName string
@@ -21,70 +20,29 @@ func init() {
 
 func main() {
 
-	versionMap := map[string]Version{
-		"KJV":                       KJV,
-		"King James Version":        KJV,
-		"ASV":                       ASV,
-		"American Standard Version": ASV,
-	}
-
-	if _, ok := versionMap[versionName]; !ok {
+	if _, ok := VersionMap[versionName]; !ok {
 		log.Fatalf("Version %s not found", versionName)
 	}
 
-	var bible = NewBible(versionMap[versionName])
+	var bible = NewBible(VersionMap[versionName])
 
 	bible.LoadSourceFile()
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "get":
+			if len(os.Args) < 3 {
+				log.Println("Usage: bible get <verse>")
+				log.Fatal("Not enough arguments")
+			}
 			targetVerse := strings.Split(os.Args[2], " ")
-			// Get the book
-			bookName := ""
-			// If the first character is a digit, then the book name is two words
-			if unicode.IsDigit(rune(targetVerse[0][0])) {
-				bookName = strings.Join(targetVerse[:2], " ")
-				targetVerse = targetVerse[2:]
-			} else {
-				bookName = targetVerse[0]
-				targetVerse = targetVerse[1:]
+
+			verses := bible.ParseVerse(targetVerse)
+
+			for _, verse := range verses {
+				fmt.Println(verse.Name, verse.Text)
 			}
 
-			// Get the verse
-			verse := strings.Join(targetVerse, " ")
-
-			// Split the verse into start and end
-			verseRange := strings.Split(verse, "-")
-			verseStart := verseRange[0]
-			verseEnd := ""
-
-			verseStartSplit := strings.Split(verseStart, ":")
-
-			if len(verseRange) > 1 {
-				verseEnd = verseStartSplit[0] + ":" + verseRange[1]
-			} else {
-				verseEnd = verseStart
-			}
-
-			// Find the book
-			for _, book := range bible.Books {
-				if book.Name == bookName {
-					// Find the verses
-					startFound := false
-					for _, v := range book.Verses {
-						if v.Name == bookName+" "+verseStart {
-							startFound = true
-						}
-						if startFound {
-							fmt.Println(v.Name, v.Text)
-						}
-						if v.Name == bookName+" "+verseEnd {
-							break
-						}
-					}
-				}
-			}
 		case "random":
 			fmt.Print("Do you want to use a custom book? (yes/no) ")
 			var customBook string
@@ -115,7 +73,30 @@ func main() {
 			verse := book.Verses[rand.Intn(len(book.Verses))]
 
 			fmt.Println(verse.Name, verse.Text)
+		case "compare":
+			if len(os.Args) < 5 {
+				log.Println("Usage: bible compare <verse> <version1> <version2> ... <versionN>")
+				log.Fatal("Not enough arguments")
+			}
 
+			targetVerse := strings.Split(os.Args[2], " ")
+
+			versions := os.Args[3:]
+
+			for _, version := range versions {
+				if _, ok := VersionMap[version]; !ok {
+					log.Fatalf("Version %s not found", version)
+				}
+
+				var bible = NewBible(VersionMap[version])
+				bible.LoadSourceFile()
+
+				verses := bible.ParseVerse(targetVerse)
+
+				for _, verse := range verses {
+					fmt.Println(verse.Name, verse.Text, " | ", version)
+				}
+			}
 		}
 	}
 }

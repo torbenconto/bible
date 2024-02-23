@@ -18,3 +18,10 @@ var versions = []Version{
 	KJV,
 	ASV,
 }
+
+var VersionMap = map[string]Version{
+	"KJV":                       KJV,
+	"King James Version":        KJV,
+	"ASV":                       ASV,
+	"American Standard Version": ASV,
+}

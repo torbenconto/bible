@@ -66,3 +66,51 @@ func InitDotBible() {
 		}
 	}
 }
+
+func InitVersion(version Version) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	baseDir := filepath.Join(home, ".bible")
+	versionsDir := filepath.Join(baseDir, "versions")
+	versionDir := filepath.Join(versionsDir, version.Name)
+
+	_, err = os.Stat(versionDir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			err = os.Mkdir(versionDir, 0755)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// Download the version
+			resp, err := http.Get(version.Url)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			split := strings.Split(version.Url, ".")
+			name := filepath.Join(versionDir, version.Name+"."+split[len(split)-1])
+			file, err := os.Create(name)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// Write the file
+			_, err = io.Copy(file, resp.Body)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if err := file.Close(); err != nil {
+				log.Fatal(err)
+			}
+
+			if err := resp.Body.Close(); err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+}

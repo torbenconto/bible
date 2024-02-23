@@ -26,7 +26,11 @@ func (b *Bible) LoadSourceFile() *Bible {
 	}
 	file, err := os.Open(filepath.Join(home, fmt.Sprintf(".bible/versions/%s/%s.txt", b.Version.Name, b.Version.Name)))
 	if err != nil {
-		log.Fatal(err)
+		if os.IsNotExist(err) {
+			log.Printf("Version %s not found locally", b.Version.Name)
+			log.Println("Downloading the version")
+			InitVersion(b.Version)
+		}
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -81,4 +85,56 @@ func (b *Bible) LoadSourceFile() *Bible {
 	}
 
 	return b
+}
+
+func (b *Bible) ParseVerse(targetVerse []string) []*Verse {
+	// Get the book
+	bookName := ""
+	// If the first character is a digit, then the book name is two words
+	if unicode.IsDigit(rune(targetVerse[0][0])) {
+		bookName = strings.Join(targetVerse[:2], " ")
+		targetVerse = targetVerse[2:]
+	} else {
+		bookName = targetVerse[0]
+		targetVerse = targetVerse[1:]
+	}
+
+	// Get the verse
+	verse := strings.Join(targetVerse, " ")
+
+	// Split the verse into start and end
+	verseRange := strings.Split(verse, "-")
+	verseStart := verseRange[0]
+	verseEnd := ""
+
+	verseStartSplit := strings.Split(verseStart, ":")
+
+	if len(verseRange) > 1 {
+		verseEnd = verseStartSplit[0] + ":" + verseRange[1]
+	} else {
+		verseEnd = verseStart
+	}
+
+	verses := make([]*Verse, 0)
+
+	// Find the book
+	for _, book := range b.Books {
+		if book.Name == bookName {
+			// Find the verses
+			startFound := false
+			for _, v := range book.Verses {
+				if v.Name == bookName+" "+verseStart {
+					startFound = true
+				}
+				if startFound {
+					verses = append(verses, &v)
+				}
+				if v.Name == bookName+" "+verseEnd {
+					break
+				}
+			}
+		}
+	}
+
+	return verses
 }
