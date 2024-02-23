@@ -22,23 +22,17 @@ func ParseBible(file *os.File) []Book {
 		bookName := ""
 		verseStartIndex := 0
 		for i, word := range words {
-			if unicode.IsDigit(rune(word[0])) {
+			if unicode.IsDigit(rune(word[0])) && i != 0 { // Ignore the first word starting with a digit
 				verseStartIndex = i
 				break
 			}
 			bookName += word + " "
 		}
+
 		bookName = strings.TrimSpace(bookName)
 
-		var verseName string
-		var verseText string
-		if unicode.IsDigit(rune(words[0][0])) {
-			verseName = bookName + " " + words[verseStartIndex]
-			verseText = strings.Join(words[verseStartIndex+2:], " ")
-		} else {
-			verseName = bookName + " " + words[verseStartIndex]
-			verseText = strings.Join(words[verseStartIndex+1:], " ")
-		}
+		verseName := bookName + " " + words[verseStartIndex]
+		verseText := strings.Join(words[verseStartIndex+1:], " ")
 
 		// Check if the book already exists, if not, create a new book
 		var currentBook *Book
