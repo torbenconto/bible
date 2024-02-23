@@ -22,8 +22,10 @@ func init() {
 func main() {
 
 	versionMap := map[string]Version{
-		"KJV":                KJV,
-		"King James Version": KJV,
+		"KJV":                       KJV,
+		"King James Version":        KJV,
+		"ASV":                       ASV,
+		"American Standard Version": ASV,
 	}
 
 	if _, ok := versionMap[versionName]; !ok {
@@ -96,6 +98,5 @@ func main() {
 			fmt.Println(verse.Name, verse.Text)
 
 		}
-
 	}
 }

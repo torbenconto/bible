@@ -8,3 +8,5 @@ type Verse struct {
 func NewVerse(name, text string) *Verse {
 	return &Verse{name, text}
 }
+
+// 1:1-5
