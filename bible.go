@@ -87,7 +87,7 @@ func (b *Bible) LoadSourceFile() *Bible {
 	return b
 }
 
-func (b *Bible) ParseVerse(targetVerse []string) []*Verse {
+func (b *Bible) ParseVerse(targetVerse []string) []Verse {
 	// Get the book
 	bookName := ""
 	// If the first character is a digit, then the book name is two words
@@ -115,7 +115,7 @@ func (b *Bible) ParseVerse(targetVerse []string) []*Verse {
 		verseEnd = verseStart
 	}
 
-	verses := make([]*Verse, 0)
+	verses := make([]Verse, 0)
 
 	// Find the book
 	for _, book := range b.Books {
@@ -127,7 +127,7 @@ func (b *Bible) ParseVerse(targetVerse []string) []*Verse {
 					startFound = true
 				}
 				if startFound {
-					verses = append(verses, &v)
+					verses = append(verses, v)
 				}
 				if v.Name == bookName+" "+verseEnd {
 					break
