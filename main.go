@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
@@ -77,7 +78,38 @@ func main() {
 					}
 				}
 			}
-		}
-	}
+		case "random":
+			fmt.Print("Do you want to use a custom book? (yes/no) ")
+			var customBook string
+			_, err := fmt.Scan(&customBook)
+			if err != nil {
+				log.Fatal(err)
+			}
 
+			var book Book
+			if strings.ToLower(customBook) == "yes" {
+				fmt.Print("Enter the name of the book: ")
+				var bookName string
+				_, err := fmt.Scan(&bookName)
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				for _, b := range bible {
+					if b.Name == bookName {
+						book = b
+						break
+					}
+				}
+			} else {
+				book = bible[rand.Intn(len(bible))]
+			}
+
+			verse := book.Verses[rand.Intn(len(book.Verses))]
+
+			fmt.Println(verse.Name, verse.Text)
+
+		}
+
+	}
 }

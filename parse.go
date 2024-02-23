@@ -13,6 +13,10 @@ func ParseBible(file *os.File) []Book {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+		// Skip first two lines
+		if scanner.Text() == "KJV" || scanner.Text() == "King James Bible: Pure Cambridge Edition - Text courtesy of www.BibleProtector.com" {
+			continue
+		}
 		line := scanner.Text()
 
 		// Split the line into words
