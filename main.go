@@ -1,34 +1,38 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"math/rand"
 	"os"
-	"path/filepath"
 	"strings"
 	"unicode"
 )
 
+var versionName string
+
 func init() {
+	flag.StringVar(&versionName, "version", "KJV", "Specify the version of the Bible to use")
+	flag.Parse()
+
 	InitDotBible()
 }
 
 func main() {
-	var bible = NewBible(KJV)
 
-	// Home dir
-	home, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal(err)
-	}
-	// Get kjv version for now
-	file, err := os.Open(filepath.Join(home, ".bible/versions/kjv/kjv.txt"))
-	if err != nil {
-		log.Fatal(err)
+	versionMap := map[string]Version{
+		"KJV":                KJV,
+		"King James Version": KJV,
 	}
 
-	bible.ParseSourceFile(file)
+	if _, ok := versionMap[versionName]; !ok {
+		log.Fatalf("Version %s not found", versionName)
+	}
+
+	var bible = NewBible(versionMap[versionName])
+
+	bible.LoadSourceFile()
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {

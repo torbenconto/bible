@@ -2,8 +2,10 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"unicode"
 )
@@ -17,7 +19,16 @@ func NewBible(version Version) *Bible {
 	return &Bible{Version: version}
 }
 
-func (b *Bible) ParseSourceFile(file *os.File) *Bible {
+func (b *Bible) LoadSourceFile() *Bible {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	file, err := os.Open(filepath.Join(home, fmt.Sprintf(".bible/versions/%s/%s.txt", b.Version.Name, b.Version.Name)))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		// Skip first two lines
