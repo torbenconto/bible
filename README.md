@@ -35,3 +35,13 @@ bible random
 ```bash
 bible random "John"
 ```
+
+### Search for a verse
+```bash
+bible search "God is love"
+```
+
+### Get a list of books
+```bash
+bible books
+```

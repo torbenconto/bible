@@ -89,6 +89,22 @@ func main() {
 					fmt.Println(verse.Name, verse.Text, "|", version)
 				}
 			}
+		case "search":
+			if len(os.Args) < 3 {
+				log.Println("Usage: bible search <term>")
+				log.Fatal("Not enough arguments")
+			}
+
+			term := os.Args[2]
+			verses := bible.Search(term)
+
+			for _, verse := range verses {
+				fmt.Println(verse.Name, verse.Text)
+			}
+		case "books":
+			for _, book := range bible.Books {
+				fmt.Println(book.Name)
+			}
 		}
 	}
 }

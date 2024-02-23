@@ -35,13 +35,18 @@ func (b *Bible) LoadSourceFile() *Bible {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		// Skip first two lines
+		line := scanner.Text()
+		badline := false
+
 		for _, badLine := range b.Version.BadLines {
-			if scanner.Text() == badLine {
-				continue
+			if strings.Contains(line, badLine) {
+				badline = true
 			}
 		}
-		line := scanner.Text()
+
+		if badline {
+			continue
+		}
 
 		// Split the line into words
 		words := strings.Fields(line)
@@ -136,5 +141,17 @@ func (b *Bible) ParseVerse(targetVerse []string) []Verse {
 		}
 	}
 
+	return verses
+}
+
+func (b *Bible) Search(query string) []Verse {
+	verses := make([]Verse, 0)
+	for _, book := range b.Books {
+		for _, verse := range book.Verses {
+			if strings.Contains(verse.Text, query) {
+				verses = append(verses, verse)
+			}
+		}
+	}
 	return verses
 }
