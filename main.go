@@ -44,21 +44,13 @@ func main() {
 			}
 
 		case "random":
-			fmt.Print("Do you want to use a custom book? (yes/no) ")
-			var customBook string
-			_, err := fmt.Scan(&customBook)
-			if err != nil {
-				log.Fatal(err)
+			bookName := ""
+			if len(os.Args) > 2 {
+				bookName = os.Args[2]
 			}
 
 			var book Book
-			if strings.ToLower(customBook) == "yes" {
-				fmt.Print("Enter the name of the book: ")
-				var bookName string
-				_, err := fmt.Scan(&bookName)
-				if err != nil {
-					log.Fatal(err)
-				}
+			if bookName != "" {
 
 				for _, b := range bible.Books {
 					if b.Name == bookName {
