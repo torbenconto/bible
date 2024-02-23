@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func InitializeBible() {
+func InitDotBible() {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)

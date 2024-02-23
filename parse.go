@@ -30,8 +30,15 @@ func ParseBible(file *os.File) []Book {
 		}
 		bookName = strings.TrimSpace(bookName)
 
-		// The rest of the line is the verse
-		verse := strings.Join(words[verseStartIndex:], " ")
+		var verseName string
+		var verseText string
+		if unicode.IsDigit(rune(words[0][0])) {
+			verseName = bookName + " " + words[verseStartIndex]
+			verseText = strings.Join(words[verseStartIndex+2:], " ")
+		} else {
+			verseName = bookName + " " + words[verseStartIndex]
+			verseText = strings.Join(words[verseStartIndex+1:], " ")
+		}
 
 		// Check if the book already exists, if not, create a new book
 		var currentBook *Book
@@ -48,7 +55,7 @@ func ParseBible(file *os.File) []Book {
 		}
 
 		// Add the verse to the current book
-		currentBook.Verses = append(currentBook.Verses, *NewVerse(bookName, verse))
+		currentBook.Verses = append(currentBook.Verses, *NewVerse(verseName, verseText))
 	}
 
 	if err := scanner.Err(); err != nil {
