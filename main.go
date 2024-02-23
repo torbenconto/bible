@@ -54,14 +54,33 @@ func main() {
 			// Get the verse
 			verse := strings.Join(targetVerse, " ")
 
+			// Split the verse into start and end
+			verseRange := strings.Split(verse, "-")
+			verseStart := verseRange[0]
+			verseEnd := ""
+
+			verseStartSplit := strings.Split(verseStart, ":")
+
+			if len(verseRange) > 1 {
+				verseEnd = verseStartSplit[0] + ":" + verseRange[1]
+			} else {
+				verseEnd = verseStart
+			}
+
 			// Find the book
 			for _, book := range bible.Books {
 				if book.Name == bookName {
-					// Find the verse
+					// Find the verses
+					startFound := false
 					for _, v := range book.Verses {
-						if v.Name == bookName+" "+verse {
+						if v.Name == bookName+" "+verseStart {
+							startFound = true
+						}
+						if startFound {
 							fmt.Println(v.Name, v.Text)
-							return
+						}
+						if v.Name == bookName+" "+verseEnd {
+							break
 						}
 					}
 				}
