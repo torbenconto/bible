@@ -107,6 +107,8 @@ func main() {
 			for _, book := range bible.Books {
 				fmt.Println(book.Name)
 			}
+		default:
+			log.Println("Usage: bible <command> [args]")
 		}
 	}
 }
