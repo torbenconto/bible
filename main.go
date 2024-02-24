@@ -51,12 +51,15 @@ func main() {
 
 			var book Book
 			if bookName != "" {
-
 				for _, b := range bible.Books {
 					if b.Name == bookName {
 						book = b
 						break
 					}
+				}
+
+				if book.Name == "" {
+					log.Fatalf("Custom book not found, run bible books to retireve a list of availible books")
 				}
 			} else {
 				book = bible.Books[rand.Intn(len(bible.Books))]
