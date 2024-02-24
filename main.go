@@ -94,9 +94,8 @@ func main() {
 				log.Println("Usage: bible search <term>")
 				log.Fatal("Not enough arguments")
 			}
-
 			term := os.Args[2]
-			verses := bible.Search(term)
+			verses := bible.Search(term, false)
 
 			for _, verse := range verses {
 				fmt.Println(verse.Name, verse.Text)
