@@ -39,6 +39,10 @@ func main() {
 
 			verses := bible.ParseVerse(targetVerse)
 
+			if len(verses) == 0 {
+				log.Println("No results found")
+			}
+
 			for _, verse := range verses {
 				fmt.Println(verse.Name, verse.Text)
 			}
@@ -88,6 +92,10 @@ func main() {
 
 				verses := bible.ParseVerse(targetVerse)
 
+				if len(verses) == 0 {
+					log.Println("No results found")
+				}
+
 				for _, verse := range verses {
 					fmt.Println(verse.Name, verse.Text, "|", version)
 				}
@@ -99,6 +107,10 @@ func main() {
 			}
 			term := os.Args[2]
 			verses := bible.Search(term, false)
+
+			if len(verses) == 0 {
+				log.Println("No results found")
+			}
 
 			for _, verse := range verses {
 				fmt.Println(verse.Name, verse.Text)
