@@ -124,17 +124,19 @@ func (b *Bible) ParseVerse(targetVerse []string) []Verse {
 
 	// Find the book
 	for _, book := range b.Books {
-		if book.Name == bookName {
+		bookName = strings.ToLower(bookName)
+
+		if strings.ToLower(book.Name) == bookName {
 			// Find the verses
 			startFound := false
 			for _, v := range book.Verses {
-				if v.Name == bookName+" "+verseStart {
+				if strings.ToLower(v.Name) == bookName+" "+verseStart {
 					startFound = true
 				}
 				if startFound {
 					verses = append(verses, v)
 				}
-				if v.Name == bookName+" "+verseEnd {
+				if strings.ToLower(v.Name) == bookName+" "+verseEnd {
 					break
 				}
 			}
