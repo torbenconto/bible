@@ -32,6 +32,9 @@ func (b *Bible) LoadSourceFile() *Bible {
 			log.Printf("Version %s not found locally", b.Version.Name)
 			log.Println("Downloading the version")
 			config.InitVersion(b.Version)
+
+			// Bad but only way to make it look clean
+			os.Exit(1)
 		}
 	}
 

@@ -17,7 +17,6 @@ import (
 var wg sync.WaitGroup
 
 func InitDotBible() {
-
 	home, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
@@ -42,29 +41,18 @@ func InitDotBible() {
 
 			for _, v := range versions.RecommendedVersions {
 				wg.Add(1)
-				go InitVersion(v)
+				go func(v versions.Version) {
+					InitVersion(v)
+					wg.Done()
+				}(v)
 			}
 			wg.Wait()
 			fmt.Println(".bible initialization completed.")
 		}
 	}
-	for _, v := range versions.RecommendedVersions {
-		versionDir := filepath.Join(versionsDir, v.Name)
-		_, err = os.Stat(versionDir)
-		if err != nil {
-			if os.IsNotExist(err) {
-				wg.Add(1)
-				go InitVersion(v)
-			}
-		}
-	}
-
-	wg.Wait()
 }
 
 func InitVersion(version versions.Version) {
-	defer wg.Done()
-
 	home, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
@@ -75,6 +63,12 @@ func InitVersion(version versions.Version) {
 
 	// Create baseDir/versions/{version.name}
 	versionDir := filepath.Join(versionsDir, version.Name)
+	_, err = os.Stat(versionDir)
+	if err == nil {
+		// Version already exists, return early
+		return
+	}
+
 	os.Mkdir(versionDir, 0755)
 
 	// Download the version

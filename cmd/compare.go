@@ -19,9 +19,9 @@ var compareCmd = &cobra.Command{
 		// Get the Bible from the context
 		ctxBible := bible.GetFromContext(cmd.Context())
 
-		for _, version := range targetVersions {
-			var targetBible = ctxBible
+		var targetBible = ctxBible
 
+		for _, version := range targetVersions {
 			if _, ok := versions.VersionMap[version]; !ok {
 				log.Fatalf("Version %s not found", version)
 			}
@@ -31,7 +31,9 @@ var compareCmd = &cobra.Command{
 				newBible.LoadSourceFile()
 				targetBible = newBible
 			}
+		}
 
+		for _, version := range targetVersions {
 			verses := targetBible.ParseVerse(verse)
 
 			if len(verses) == 0 {
