@@ -23,6 +23,8 @@ var DRB = *NewVersion("drb", "drb.txt", "https://openbible.com/textfiles/drb.txt
 var ERV = *NewVersion("erv", "erv.txt", "https://openbible.com/textfiles/erv.txt", []string{"ERV", "English Revised Version"})
 var YLT = *NewVersion("ylt", "ylt.txt", "https://openbible.com/textfiles/ylt.txt", []string{"YLT", "Young's Literal Translation"})
 var NLT = *NewVersion("nlt", "nlt.txt", "https://raw.githubusercontent.com/torbenconto/bibles/master/nlt.txt", []string{})
+var EASY = *NewVersion("easy", "easy.txt", "https://raw.githubusercontent.com/torbenconto/bibles/master/easy.txt", []string{})
+var CSB = *NewVersion("csb", "csb.txt", "https://raw.githubusercontent.com/torbenconto/bibles/master/csb.txt", []string{})
 
 var Versions = []Version{
 	NIV,
@@ -37,6 +39,8 @@ var Versions = []Version{
 	ERV,
 	YLT,
 	NLT,
+	EASY,
+	CSB,
 }
 
 var RecommendedVersions = []Version{
@@ -71,4 +75,8 @@ var VersionMap = map[string]Version{
 	"Young's Literal Translation": YLT,
 	"NLT":                         NLT,
 	"New Living Translation":      NLT,
+	"EASY":                        EASY,
+	"Easy-to-Read Version":        EASY,
+	"CSB":                         CSB,
+	"Christian Standard Bible":    CSB,
 }
