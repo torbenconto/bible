@@ -20,9 +20,19 @@ var DRB = *NewVersion("drb", "drb.txt", "https://openbible.com/textfiles/drb.txt
 var ERV = *NewVersion("erv", "erv.txt", "https://openbible.com/textfiles/erv.txt", []string{"ERV", "English Revised Version"})
 var YLT = *NewVersion("ylt", "ylt.txt", "https://openbible.com/textfiles/ylt.txt", []string{"YLT", "Young's Literal Translation"})
 
-var RecommendedVersions = []Version{
+var Versions = []Version{
+	NIV,
 	KJV,
 	ASV,
+	BSB,
+	DBT,
+	DRB,
+	ERV,
+	YLT,
+}
+
+var RecommendedVersions = []Version{
+	KJV,
 	NIV,
 }
 
