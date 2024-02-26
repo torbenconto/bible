@@ -1,4 +1,4 @@
-package main
+package bible
 
 type Verse struct {
 	Name string

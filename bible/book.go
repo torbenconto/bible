@@ -1,4 +1,4 @@
-package main
+package bible
 
 type Book struct {
 	Name   string

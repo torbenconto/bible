@@ -1,8 +1,10 @@
-package main
+package bible
 
 import (
 	"bufio"
 	"fmt"
+	"github.com/torbenconto/bible/config"
+	"github.com/torbenconto/bible/versions"
 	"log"
 	"os"
 	"path/filepath"
@@ -11,11 +13,11 @@ import (
 )
 
 type Bible struct {
-	Version Version
+	Version versions.Version
 	Books   []Book
 }
 
-func NewBible(version Version) *Bible {
+func NewBible(version versions.Version) *Bible {
 	return &Bible{Version: version}
 }
 
@@ -29,7 +31,7 @@ func (b *Bible) LoadSourceFile() *Bible {
 		if os.IsNotExist(err) {
 			log.Printf("Version %s not found locally", b.Version.Name)
 			log.Println("Downloading the version")
-			InitVersion(b.Version)
+			config.InitVersion(b.Version)
 		}
 	}
 

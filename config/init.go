@@ -1,8 +1,9 @@
-package main
+package config
 
 import (
 	"fmt"
 	"github.com/cheggaaa/pb/v3"
+	"github.com/torbenconto/bible/versions"
 	"io"
 	"log"
 	"net/http"
@@ -39,7 +40,7 @@ func InitDotBible() {
 				log.Fatal(err)
 			}
 
-			for _, v := range versions {
+			for _, v := range versions.Versions {
 				wg.Add(1)
 				go InitVersion(v)
 			}
@@ -50,7 +51,7 @@ func InitDotBible() {
 
 }
 
-func InitVersion(version Version) {
+func InitVersion(version versions.Version) {
 	defer wg.Done()
 
 	home, err := os.UserHomeDir()
