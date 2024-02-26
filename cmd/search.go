@@ -9,8 +9,8 @@ import (
 )
 
 var searchCmd = &cobra.Command{
-	Use:   "search",
-	Short: "Search for a verse in the Bible",
+	Use:   "search [term]",
+	Short: "Search for terms in the Bible",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the Bible from the context

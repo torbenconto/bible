@@ -6,6 +6,7 @@ import (
 	"github.com/torbenconto/bible/bible"
 	"github.com/torbenconto/bible/versions"
 	"log"
+	"strings"
 )
 
 var compareCmd = &cobra.Command{
@@ -15,6 +16,10 @@ var compareCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		verse := args[0]
 		targetVersions := args[1:]
+
+		for _, version := range targetVersions {
+			version = strings.ToUpper(version)
+		}
 
 		// Get the Bible from the context
 		ctxBible := bible.GetFromContext(cmd.Context())

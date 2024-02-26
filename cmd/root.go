@@ -9,6 +9,7 @@ import (
 	"github.com/torbenconto/bible/versions"
 	"log"
 	"os"
+	"strings"
 )
 
 var BibleVersion string
@@ -23,6 +24,7 @@ var rootCmd = &cobra.Command{
 	Short: "bible is a command line tool for reading and searching the Bible",
 	Long:  `bible is a command line tool for reading and searching the Bible. It supports multiple versions of the Bible and provides a simple interface for reading and searching.`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		BibleVersion = strings.ToUpper(BibleVersion)
 		if _, ok := versions.VersionMap[BibleVersion]; !ok {
 			log.Printf("Version %s not found\n", BibleVersion)
 			os.Exit(1)
