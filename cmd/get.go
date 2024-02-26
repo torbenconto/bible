@@ -16,13 +16,13 @@ var getCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Get the Bible from the context
-		bible := bible.GetFromContext(cmd.Context())
+		ctxBible := bible.GetFromContext(cmd.Context())
 
 		targetVerse := args[0]
 
 		splitVerse := strings.Split(targetVerse, " ")
 
-		verses := bible.ParseVerse(splitVerse)
+		verses := ctxBible.ParseVerse(splitVerse)
 
 		if len(verses) == 0 {
 			log.Fatal("No results found")

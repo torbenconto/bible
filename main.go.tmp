@@ -48,7 +48,7 @@ func main() {
 				fmt.Println(verse.Name, verse.Text)
 			}
 
-		case "random":
+		case "random": IP
 			bookName := ""
 			if len(os.Args) > 2 {
 				bookName = os.Args[2]
