@@ -6,42 +6,27 @@ A simple command line interface for the Bible.
  go install github.com/torbenconto/bible
 ```
 
-## Usage
-Flags:
-`--version <Bible Version (eg: KJV or ASV)>` pulls from that version of the bible
+# Setup
+```bash
+bible
+```
+Recommended versions 
+- NIV
+- KJV
 
-### Get verse by name
+Are installed by default.
+
+You can add more versions by running the following command
+```bash
+bible install <version>
+```
+
+# Usage
+```bash
+bible --help
+```
+
+# Example
 ```bash
 bible get "John 3:16"
-```
-
-### Get multiple verses
-```bash
-bible get "John 3:16-17"
-```
-
-### Compare verses in different versions
-```bash
-bible compare "John 3:16-7" ASV KJV (etc)
-```
-Takes N versions and will print out the verse(s) in each version
-
-### Get Random Verse
-```bash
-bible random
-```
-
-### Get Random Verse from a specific book
-```bash
-bible random "John"
-```
-
-### Search for a verse
-```bash
-bible search "God is love"
-```
-
-### Get a list of books
-```bash
-bible books
 ```

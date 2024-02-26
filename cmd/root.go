@@ -16,7 +16,7 @@ var BibleVersion string
 
 func init() {
 	cobra.OnInitialize(config.InitDotBible)
-	rootCmd.PersistentFlags().StringVarP(&BibleVersion, "version", "v", "KJV", "Specify the version of the Bible to use")
+	rootCmd.PersistentFlags().StringVarP(&BibleVersion, "version", "v", "NIV", "Specify the version of the Bible to use")
 }
 
 var rootCmd = &cobra.Command{
