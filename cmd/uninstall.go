@@ -32,7 +32,9 @@ var uninstallCmd = &cobra.Command{
 		// Construct the path to the version directory
 		versionDir := filepath.Join(home, ".bible", "versions", strings.ToLower(version))
 
-		fmt.Println(versionDir)
+		if _, err := os.Stat(versionDir); os.IsNotExist(err) {
+			log.Fatalf("Version %s is not installed", version)
+		}
 
 		// Delete the version directory
 		err = os.RemoveAll(versionDir)
