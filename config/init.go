@@ -24,6 +24,7 @@ func InitDotBible() {
 	}
 
 	baseDir := filepath.Join(home, ".bible")
+	versionsDir := filepath.Join(baseDir, "versions")
 
 	_, err = os.Stat(baseDir)
 	if err != nil {
@@ -34,7 +35,6 @@ func InitDotBible() {
 				log.Fatal(err)
 			}
 
-			versionsDir := filepath.Join(baseDir, "versions")
 			err = os.Mkdir(versionsDir, 0755)
 			if err != nil {
 				log.Fatal(err)
@@ -48,7 +48,18 @@ func InitDotBible() {
 			fmt.Println(".bible initialization completed.")
 		}
 	}
+	for _, v := range versions.Versions {
+		versionDir := filepath.Join(versionsDir, v.Name)
+		_, err = os.Stat(versionDir)
+		if err != nil {
+			if os.IsNotExist(err) {
+				wg.Add(1)
+				go InitVersion(v)
+			}
+		}
+	}
 
+	wg.Wait()
 }
 
 func InitVersion(version versions.Version) {
