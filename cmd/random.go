@@ -8,15 +8,18 @@ import (
 	"math/rand"
 )
 
-var count int
-var bookName string
-
 var randomCmd = &cobra.Command{
 	Use:   "random",
 	Short: "Get a random verse from the Bible",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the Bible from the context
 		ctxBible := bible.GetFromContext(cmd.Context())
+
+		bookName := cmd.Flag("book").Value.String()
+		count, err := cmd.Flags().GetInt("count")
+		if err != nil {
+			log.Fatalf("Error getting count: %s", err)
+		}
 
 		var book bible.Book
 		if bookName != "" {
@@ -42,7 +45,7 @@ var randomCmd = &cobra.Command{
 }
 
 func init() {
-	randomCmd.Flags().IntVarP(&count, "count", "c", 1, "Number of random verses to get")
-	randomCmd.Flags().StringVarP(&bookName, "book", "b", "", "Specify a book to get random verses from")
+	randomCmd.Flags().IntP("count", "c", 1, "Number of random verses to get")
+	randomCmd.Flags().StringP("book", "b", "", "Specify a book to get random verses from")
 	rootCmd.AddCommand(randomCmd)
 }

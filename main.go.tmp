@@ -101,7 +101,7 @@ func main() {
 					fmt.Println(verse.Name, verse.Text, "|", version)
 				}
 			}
-		case "search":
+		case "search": IP
 			if len(os.Args) < 3 {
 				log.Println("Usage: bible search <term>")
 				log.Fatal("Not enough arguments")

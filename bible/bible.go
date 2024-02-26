@@ -149,22 +149,3 @@ func (b *Bible) ParseVerse(verse string) []Verse {
 
 	return verses
 }
-
-func (b *Bible) Search(query string, caseSensitive bool) []Verse {
-	verses := make([]Verse, 0)
-	for _, book := range b.Books {
-		for _, verse := range book.Verses {
-			var text string
-			if !caseSensitive {
-				query = strings.ToLower(query)
-				text = strings.ToLower(verse.Text)
-			} else {
-				text = verse.Text
-			}
-			if strings.Contains(text, query) {
-				verses = append(verses, verse)
-			}
-		}
-	}
-	return verses
-}
