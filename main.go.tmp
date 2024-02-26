@@ -48,7 +48,7 @@ func main() {
 				fmt.Println(verse.Name, verse.Text)
 			}
 
-		case "random": IP
+		case "random": DONE
 			bookName := ""
 			if len(os.Args) > 2 {
 				bookName = os.Args[2]
@@ -73,7 +73,7 @@ func main() {
 			verse := book.Verses[rand.Intn(len(book.Verses))]
 
 			fmt.Println(verse.Name, verse.Text)
-		case "compare":
+		case "compare": DONE
 			if len(os.Args) < 5 {
 				log.Println("Usage: bible compare <verse> <version1> <version2> ... <versionN>")
 				log.Fatal("Not enough arguments")

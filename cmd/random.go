@@ -14,7 +14,6 @@ var bookName string
 var randomCmd = &cobra.Command{
 	Use:   "random",
 	Short: "Get a random verse from the Bible",
-	Long:  `Get a random verse from the Bible`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the Bible from the context
 		ctxBible := bible.GetFromContext(cmd.Context())

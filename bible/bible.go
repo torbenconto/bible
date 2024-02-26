@@ -94,7 +94,9 @@ func (b *Bible) LoadSourceFile() *Bible {
 	return b
 }
 
-func (b *Bible) ParseVerse(targetVerse []string) []Verse {
+func (b *Bible) ParseVerse(verse string) []Verse {
+	targetVerse := strings.Split(verse, " ")
+
 	// Get the book
 	bookName := ""
 	// If the first character is a digit, then the book name is two words
@@ -107,10 +109,10 @@ func (b *Bible) ParseVerse(targetVerse []string) []Verse {
 	}
 
 	// Get the verse
-	verse := strings.Join(targetVerse, " ")
+	splitVerse := strings.Join(targetVerse, " ")
 
 	// Split the verse into start and end
-	verseRange := strings.Split(verse, "-")
+	verseRange := strings.Split(splitVerse, "-")
 	verseStart := verseRange[0]
 	verseEnd := ""
 
