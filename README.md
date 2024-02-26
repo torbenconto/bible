@@ -20,6 +20,13 @@ You can add more versions by running the following command
 ```bash
 bible install <version>
 ```
+Basically every semi-popular version is supported and able to be installed and used.
+EG:
+- NKJV
+- NLT
+- ASV
+- BSB
+- Many More
 
 # Usage
 ```bash
