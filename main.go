@@ -19,7 +19,6 @@ func init() {
 }
 
 func main() {
-
 	if _, ok := VersionMap[versionName]; !ok {
 		log.Fatalf("Version %s not found", versionName)
 	}
@@ -118,6 +117,10 @@ func main() {
 		case "books":
 			for _, book := range bible.Books {
 				fmt.Println(book.Name)
+			}
+		case "versions":
+			for _, version := range versions {
+				fmt.Println(version.Name)
 			}
 		default:
 			log.Println("Usage: bible <command> [args]")
