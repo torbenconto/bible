@@ -40,7 +40,7 @@ func InitDotBible() {
 				log.Fatal(err)
 			}
 
-			for _, v := range versions.Versions {
+			for _, v := range versions.RecommendedVersions {
 				wg.Add(1)
 				go InitVersion(v)
 			}
@@ -48,7 +48,7 @@ func InitDotBible() {
 			fmt.Println(".bible initialization completed.")
 		}
 	}
-	for _, v := range versions.Versions {
+	for _, v := range versions.RecommendedVersions {
 		versionDir := filepath.Join(versionsDir, v.Name)
 		_, err = os.Stat(versionDir)
 		if err != nil {
