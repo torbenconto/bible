@@ -11,6 +11,7 @@ func NewVersion(name, path, url string, badLines []string) *Version {
 	return &Version{name, path, url, badLines}
 }
 
+var AMP = *NewVersion("amp", "amp.txt", "https://raw.githubusercontent.com/torbenconto/bibles/master/amp.txt", []string{})
 var NIV = *NewVersion("niv", "niv.txt", "https://raw.githubusercontent.com/torbenconto/bibles/master/niv.txt", []string{})
 var ESV = *NewVersion("esv", "esv.txt", "https://raw.githubusercontent.com/torbenconto/bibles/master/esv.txt", []string{})
 var KJV = *NewVersion("kjv", "kjv.txt", "https://openbible.com/textfiles/kjv.txt", []string{"KJV", "King James Bible: Pure Cambridge Edition - Text courtesy of www.BibleProtector.com"})
@@ -27,6 +28,7 @@ var EASY = *NewVersion("easy", "easy.txt", "https://raw.githubusercontent.com/to
 var CSB = *NewVersion("csb", "csb.txt", "https://raw.githubusercontent.com/torbenconto/bibles/master/csb.txt", []string{})
 
 var Versions = []Version{
+	AMP,
 	NIV,
 	ESV,
 	KJV,
@@ -51,6 +53,8 @@ var RecommendedVersions = []Version{
 }
 
 var VersionMap = map[string]Version{
+	"AMP":                         AMP,
+	"Amplified Bible":             AMP,
 	"NIV":                         NIV,
 	"New International Version":   NIV,
 	"ESV":                         ESV,
