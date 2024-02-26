@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
 	"log"
 	"strings"
+
+	"github.com/spf13/cobra"
+	"github.com/torbenconto/bible/bible"
 )
 
 var searchCmd = &cobra.Command{
@@ -20,10 +21,13 @@ var searchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatalf("Error getting case-sensitive: %s", err)
 		}
-		bookName := cmd.Flag("book").Value.String()
+		bookName, err := cmd.Flags().GetString("book")
+		if err != nil {
+			log.Fatalf("Error getting book name: %s", err)
+		}
 		maxResults, err := cmd.Flags().GetInt("max")
 		if err != nil {
-			log.Fatalf("Error getting max: %s", err)
+			log.Fatalf("Error getting max results: %s", err)
 		}
 		wordsOnly, err := cmd.Flags().GetBool("words-only")
 		if err != nil {
@@ -32,45 +36,43 @@ var searchCmd = &cobra.Command{
 
 		verse := args[0]
 
-		verses := make([]bible.Verse, 0)
-		var query = verse
+		var foundVerses []bible.Verse
+		query := verse
 		for _, book := range ctxBible.Books {
 			// If bookName is provided, only search in that book
 			if bookName != "" && book.Name != bookName {
 				continue
 			}
-			for _, verse := range book.Verses {
-				var text string
+			for _, v := range book.Verses {
+				text := v.Text
 				if !caseSensitive {
 					query = strings.ToLower(query)
-					text = strings.ToLower(verse.Text)
-				} else {
-					text = verse.Text
+					text = strings.ToLower(text)
 				}
 				if wordsOnly {
-					words := strings.Split(text, " ")
-					for _, word := range words {
-						if word == query {
-							verses = append(verses, verse)
-							break
-						}
+					// Split text into words using whitespace and punctuation as delimiters
+					words := strings.FieldsFunc(text, func(r rune) bool {
+						return !((r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9'))
+					})
+					if containsPhrase(words, strings.Fields(query)) {
+						foundVerses = append(foundVerses, v)
 					}
 				} else {
 					if strings.Contains(text, query) {
-						verses = append(verses, verse)
+						foundVerses = append(foundVerses, v)
 					}
 				}
 			}
 		}
-		if len(verses) == 0 {
+		if len(foundVerses) == 0 {
 			log.Fatal("No results found")
 		}
 
-		if maxResults > 0 && len(verses) > maxResults {
-			verses = verses[:maxResults]
+		if maxResults > 0 && len(foundVerses) > maxResults {
+			foundVerses = foundVerses[:maxResults]
 		}
 
-		for _, v := range verses {
+		for _, v := range foundVerses {
 			fmt.Println(v.Name, v.Text)
 		}
 	},
@@ -82,4 +84,21 @@ func init() {
 	searchCmd.Flags().BoolP("words-only", "w", true, "Only return results that match the entire query")
 	searchCmd.Flags().IntP("max", "m", -1, "Maximum number of results to return")
 	rootCmd.AddCommand(searchCmd)
+}
+
+// containsPhrase checks if the phrase is contained in the text, preserving word order
+func containsPhrase(text, phrase []string) bool {
+	for i := 0; i <= len(text)-len(phrase); i++ {
+		found := true
+		for j := range phrase {
+			if text[i+j] != phrase[j] {
+				found = false
+				break
+			}
+		}
+		if found {
+			return true
+		}
+	}
+	return false
 }
