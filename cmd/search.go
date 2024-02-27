@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/torbenconto/bible-cli/util"
 	"log"
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
+	"github.com/torbenconto/bible"
 )
 
 var searchCmd = &cobra.Command{
@@ -15,7 +16,7 @@ var searchCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the Bible from the context
-		ctxBible := bible.GetFromContext(cmd.Context())
+		ctxBible := util.GetFromContext(cmd.Context())
 
 		caseSensitive, err := cmd.Flags().GetBool("case-sensitive")
 		if err != nil {

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/config"
+	"github.com/torbenconto/bible-cli/config"
 	"github.com/torbenconto/bible/versions"
 	"log"
 	"strings"

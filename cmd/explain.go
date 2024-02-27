@@ -5,7 +5,7 @@ import (
 	"fmt"
 	openai "github.com/sashabaranov/go-openai"
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
+	"github.com/torbenconto/bible-cli/util"
 	"strings"
 )
 
@@ -15,7 +15,7 @@ var explainCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the Bible from the context
-		ctxBible := bible.GetFromContext(cmd.Context())
+		ctxBible := util.GetFromContext(cmd.Context())
 
 		// Get the api key from the context
 		apiKey := cmd.Context().Value("api_key").(string)

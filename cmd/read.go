@@ -3,11 +3,11 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+	"github.com/torbenconto/bible-cli/util"
 	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
 )
 
 var readCmd = &cobra.Command{
@@ -16,7 +16,7 @@ var readCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the Bible from the context
-		ctxBible := bible.GetFromContext(cmd.Context())
+		ctxBible := util.GetFromContext(cmd.Context())
 
 		reader := bufio.NewReader(os.Stdin)
 

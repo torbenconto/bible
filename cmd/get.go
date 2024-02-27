@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
+	"github.com/torbenconto/bible-cli/util"
 	"log"
 )
 
@@ -14,7 +14,7 @@ var getCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Get the Bible from the context
-		ctxBible := bible.GetFromContext(cmd.Context())
+		ctxBible := util.GetFromContext(cmd.Context())
 
 		verse := args[0]
 

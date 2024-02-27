@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
+	"github.com/torbenconto/bible"
+	"github.com/torbenconto/bible-cli/util"
 	"github.com/torbenconto/bible/versions"
 	"log"
 	"strings"
@@ -22,7 +23,7 @@ var compareCmd = &cobra.Command{
 		}
 
 		// Get the Bible from the context
-		ctxBible := bible.GetFromContext(cmd.Context())
+		ctxBible := util.GetFromContext(cmd.Context())
 
 		var targetBible = ctxBible
 
@@ -33,7 +34,7 @@ var compareCmd = &cobra.Command{
 
 			if targetBible.Version.Name != versions.VersionMap[version].Name {
 				newBible := bible.NewBible(versions.VersionMap[version])
-				newBible.LoadSourceFile()
+				util.LoadSourceFile(newBible)
 				targetBible = newBible
 			}
 		}

@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
-	"github.com/torbenconto/bible/config"
+	"github.com/torbenconto/bible"
+	"github.com/torbenconto/bible-cli/config"
+	"github.com/torbenconto/bible-cli/util"
 	"github.com/torbenconto/bible/versions"
 	"log"
 	"os"
@@ -31,7 +32,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		newBible := bible.NewBible(versions.VersionMap[BibleVersion])
-		newBible.LoadSourceFile()
+		util.LoadSourceFile(newBible)
 
 		// Load config file
 		apiKey := config.GetApiKey()

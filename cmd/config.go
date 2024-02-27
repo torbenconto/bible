@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/config"
+	"github.com/torbenconto/bible-cli/config"
 )
 
 var configCmd = &cobra.Command{

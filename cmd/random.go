@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/torbenconto/bible/bible"
+	"github.com/torbenconto/bible"
+	"github.com/torbenconto/bible-cli/util"
 	"log"
 	"math/rand"
 )
@@ -13,7 +14,7 @@ var randomCmd = &cobra.Command{
 	Short: "Get a random verse from the Bible",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get the Bible from the context
-		ctxBible := bible.GetFromContext(cmd.Context())
+		ctxBible := util.GetFromContext(cmd.Context())
 
 		bookName := cmd.Flag("book").Value.String()
 		count, err := cmd.Flags().GetInt("count")
