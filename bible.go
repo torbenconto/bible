@@ -5,6 +5,7 @@ import (
 	"github.com/torbenconto/bible/versions"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -53,6 +54,13 @@ func (b *Bible) LoadSourceFile(file *os.File) *Bible {
 		verseName := bookName + " " + words[verseStartIndex]
 		verseText := strings.Join(words[verseStartIndex+1:], " ")
 
+		verseChapter := strings.Split(strings.Replace(verseName, bookName, "", 1), ":")[0]
+
+		verseChapterInt, err := strconv.Atoi(strings.Trim(verseChapter, " "))
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		// Check if the book already exists, if not, create a new book
 		var currentBook *Book
 		for i := range b.Books {
@@ -62,13 +70,29 @@ func (b *Bible) LoadSourceFile(file *os.File) *Bible {
 			}
 		}
 		if currentBook == nil {
-			newBook := NewBook(bookName, []Verse{})
+			newBook := NewBook(bookName, []Chapter{})
 			b.Books = append(b.Books, *newBook)
 			currentBook = &b.Books[len(b.Books)-1]
 		}
 
-		// Add the verse to the current book
-		currentBook.Verses = append(currentBook.Verses, *NewVerse(verseName, verseText))
+		newVerse := NewVerse(verseName, verseText)
+
+		// Check if the chapter already exists, if not, create a new chapter
+		var currentChapter *Chapter
+		for i := range currentBook.Chapters {
+			if currentBook.Chapters[i].Number == verseChapterInt {
+				currentChapter = &currentBook.Chapters[i]
+				break
+			}
+		}
+		if currentChapter == nil {
+			newChapter := NewChapter(verseChapterInt, []Verse{*newVerse})
+			currentBook.Chapters = append(currentBook.Chapters, *newChapter)
+			currentChapter = &currentBook.Chapters[len(currentBook.Chapters)-1]
+		} else {
+			// Add the verse to the current chapter
+			currentChapter.Verses = append(currentChapter.Verses, *newVerse)
+		}
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -78,7 +102,7 @@ func (b *Bible) LoadSourceFile(file *os.File) *Bible {
 	return b
 }
 
-func (b *Bible) ParseVerse(verse string) []Verse {
+func (b *Bible) GetVerse(verse string) []Verse {
 	targetVerse := strings.Split(verse, " ")
 
 	// Get the book
@@ -112,20 +136,32 @@ func (b *Bible) ParseVerse(verse string) []Verse {
 
 	// Find the book
 	for _, book := range b.Books {
+		endFound := false
+		if endFound {
+			break
+		}
+
 		bookName = strings.ToLower(bookName)
 
 		if strings.ToLower(book.Name) == bookName {
 			// Find the verses
 			startFound := false
-			for _, v := range book.Verses {
-				if strings.ToLower(v.Name) == bookName+" "+verseStart {
-					startFound = true
-				}
-				if startFound {
-					verses = append(verses, v)
-				}
-				if strings.ToLower(v.Name) == bookName+" "+verseEnd {
+
+			for _, c := range book.Chapters {
+				if endFound {
 					break
+				}
+				for _, v := range c.Verses {
+					if strings.ToLower(v.Name) == bookName+" "+verseStart {
+						startFound = true
+					}
+					if startFound {
+						verses = append(verses, v)
+					}
+					if strings.ToLower(v.Name) == bookName+" "+verseEnd {
+						endFound = true
+						break
+					}
 				}
 			}
 		}

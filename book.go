@@ -1,10 +1,10 @@
 package bible
 
 type Book struct {
-	Name   string
-	Verses []Verse
+	Name     string
+	Chapters []Chapter
 }
 
-func NewBook(name string, verses []Verse) *Book {
-	return &Book{name, verses}
+func NewBook(name string, chapters []Chapter) *Book {
+	return &Book{name, chapters}
 }
