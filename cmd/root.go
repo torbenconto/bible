@@ -33,7 +33,15 @@ var rootCmd = &cobra.Command{
 		newBible := bible.NewBible(versions.VersionMap[BibleVersion])
 		newBible.LoadSourceFile()
 
-		cmd.SetContext(context.WithValue(context.Background(), "bible", newBible))
+		// Load config file
+		apiKey := config.GetApiKey()
+
+		// Create a new context with the API key and the Bible instance as values
+		ctx := context.WithValue(context.Background(), "api_key", apiKey)
+		ctx = context.WithValue(ctx, "bible", newBible)
+
+		// Set the context to the command
+		cmd.SetContext(ctx)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		// Call help command
