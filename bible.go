@@ -10,6 +10,8 @@ import (
 	"unicode"
 )
 
+// TODO : Add error handling
+
 type Bible struct {
 	Version versions.Version
 	Books   []Book
