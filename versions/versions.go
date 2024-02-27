@@ -1,4 +1,4 @@
-package bible
+package versions
 
 type Version struct {
 	Name     string

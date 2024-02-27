@@ -1,16 +1,17 @@
 package bible
 
 import (
+	"github.com/torbenconto/bible/versions"
 	"strings"
 	"unicode"
 )
 
 type Bible struct {
-	Version Version
+	Version versions.Version
 	Books   []Book
 }
 
-func NewBible(version Version) *Bible {
+func NewBible(version versions.Version) *Bible {
 	return &Bible{Version: version}
 }
 
