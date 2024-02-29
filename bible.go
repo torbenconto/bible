@@ -3,14 +3,11 @@ package bible
 import (
 	"bufio"
 	"github.com/torbenconto/bible/versions"
-	"log"
 	"os"
 	"strconv"
 	"strings"
 	"unicode"
 )
-
-// TODO : Add error handling
 
 type Bible struct {
 	Version versions.Version
@@ -21,7 +18,7 @@ func NewBible(version versions.Version) *Bible {
 	return &Bible{Version: version}
 }
 
-func (b *Bible) LoadSourceFile(file *os.File) *Bible {
+func (b *Bible) LoadSourceFile(file *os.File) (*Bible, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -60,7 +57,7 @@ func (b *Bible) LoadSourceFile(file *os.File) *Bible {
 
 		verseChapterInt, err := strconv.Atoi(strings.Trim(verseChapter, " "))
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 
 		// Check if the book already exists, if not, create a new book
@@ -98,10 +95,10 @@ func (b *Bible) LoadSourceFile(file *os.File) *Bible {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return b
+	return b, nil
 }
 
 func (b *Bible) GetVerse(verse string) []Verse {
