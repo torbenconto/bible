@@ -39,7 +39,8 @@ var randomCmd = &cobra.Command{
 		}
 
 		for i := 0; i < count; i++ {
-			verse := book.Verses[rand.Intn(len(book.Verses))]
+			chapter := book.Chapters[rand.Intn(len(book.Chapters))]
+			verse := chapter.Verses[rand.Intn(len(chapter.Verses))]
 			fmt.Println(verse.Name, verse.Text)
 		}
 	},

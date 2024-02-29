@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/torbenconto/bible"
+	"github.com/torbenconto/bible-cli/config"
 	"github.com/torbenconto/bible-cli/util"
 	"github.com/torbenconto/bible/versions"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -34,13 +37,33 @@ var compareCmd = &cobra.Command{
 
 			if targetBible.Version.Name != versions.VersionMap[version].Name {
 				newBible := bible.NewBible(versions.VersionMap[version])
-				util.LoadSourceFile(newBible)
+
+				home, err := os.UserHomeDir()
+				if err != nil {
+					log.Fatal(err)
+				}
+				file, err := os.Open(filepath.Join(home, fmt.Sprintf(".bible/versions/%s/%s.txt", newBible.Version.Name, newBible.Version.Name)))
+				if err != nil {
+					if os.IsNotExist(err) {
+						log.Printf("Version %s not found locally", newBible.Version.Name)
+						log.Println("Downloading the version")
+						config.InitVersion(newBible.Version)
+
+						// Bad but only way to make it look clean
+						os.Exit(1)
+					}
+				}
+
+				err = newBible.LoadSourceFile(file)
+				if err != nil {
+					log.Fatal(err)
+				}
 				targetBible = newBible
 			}
 		}
 
 		for _, version := range targetVersions {
-			verses := targetBible.ParseVerse(verse)
+			verses := targetBible.GetVerse(verse)
 
 			if len(verses) == 0 {
 				log.Fatal("No results found")

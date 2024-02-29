@@ -6,10 +6,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/torbenconto/bible"
 	"github.com/torbenconto/bible-cli/config"
-	"github.com/torbenconto/bible-cli/util"
 	"github.com/torbenconto/bible/versions"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -32,7 +32,25 @@ var rootCmd = &cobra.Command{
 		}
 
 		newBible := bible.NewBible(versions.VersionMap[BibleVersion])
-		util.LoadSourceFile(newBible)
+		home, err := os.UserHomeDir()
+		if err != nil {
+			log.Fatal(err)
+		}
+		file, err := os.Open(filepath.Join(home, fmt.Sprintf(".bible/versions/%s/%s.txt", newBible.Version.Name, newBible.Version.Name)))
+		if err != nil {
+			if os.IsNotExist(err) {
+				log.Printf("Version %s not found locally", newBible.Version.Name)
+				log.Println("Downloading the version")
+				config.InitVersion(newBible.Version)
+
+				// Bad but only way to make it look clean
+				os.Exit(1)
+			}
+		}
+		err = newBible.LoadSourceFile(file)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		// Load config file
 		apiKey := config.GetApiKey()
