@@ -106,13 +106,25 @@ func (b *Bible) GetVerse(verse string) []Verse {
 
 	// Get the book
 	bookName := ""
-	// If the first character is a digit, then the book name is two words
-	if unicode.IsDigit(rune(targetVerse[0][0])) {
-		bookName = strings.Join(targetVerse[:2], " ")
-		targetVerse = targetVerse[2:]
-	} else {
-		bookName = targetVerse[0]
-		targetVerse = targetVerse[1:]
+	// Check if the book name is multi-worded
+	for i := 0; i < len(targetVerse); i++ {
+		potentialBookName := strings.Join(targetVerse[:i+1], " ")
+		if _, exists := b.bookNameExists(potentialBookName); exists {
+			bookName = potentialBookName
+			targetVerse = targetVerse[i+1:]
+			break
+		}
+	}
+
+	if bookName == "" {
+		// If the first character is a digit, then the book name is two words
+		if unicode.IsDigit(rune(targetVerse[0][0])) {
+			bookName = strings.Join(targetVerse[:2], " ")
+			targetVerse = targetVerse[2:]
+		} else {
+			bookName = targetVerse[0]
+			targetVerse = targetVerse[1:]
+		}
 	}
 
 	// Get the verse
@@ -142,7 +154,7 @@ func (b *Bible) GetVerse(verse string) []Verse {
 
 		bookName = strings.ToLower(bookName)
 
-		if strings.ToLower(book.Name) == bookName {
+		if strings.ToLower(book.Name) == strings.ToLower(bookName) {
 			// Find the verses
 			startFound := false
 
@@ -151,13 +163,13 @@ func (b *Bible) GetVerse(verse string) []Verse {
 					break
 				}
 				for _, v := range c.Verses {
-					if strings.ToLower(v.Name) == bookName+" "+verseStart {
+					if strings.ToLower(v.Name) == strings.ToLower(bookName+" "+verseStart) {
 						startFound = true
 					}
 					if startFound {
 						verses = append(verses, v)
 					}
-					if strings.ToLower(v.Name) == bookName+" "+verseEnd {
+					if strings.ToLower(v.Name) == strings.ToLower(bookName+" "+verseEnd) {
 						endFound = true
 						break
 					}
@@ -167,4 +179,14 @@ func (b *Bible) GetVerse(verse string) []Verse {
 	}
 
 	return verses
+}
+
+// Helper function to check if a book name exists in the list of Bible books
+func (b *Bible) bookNameExists(name string) (string, bool) {
+	for _, book := range b.Books {
+		if strings.EqualFold(book.Name, name) {
+			return book.Name, true
+		}
+	}
+	return "", false
 }
