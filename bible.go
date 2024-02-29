@@ -18,7 +18,7 @@ func NewBible(version versions.Version) *Bible {
 	return &Bible{Version: version}
 }
 
-func (b *Bible) LoadSourceFile(file *os.File) (*Bible, error) {
+func (b *Bible) LoadSourceFile(file *os.File) error {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -57,7 +57,7 @@ func (b *Bible) LoadSourceFile(file *os.File) (*Bible, error) {
 
 		verseChapterInt, err := strconv.Atoi(strings.Trim(verseChapter, " "))
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		// Check if the book already exists, if not, create a new book
@@ -95,10 +95,10 @@ func (b *Bible) LoadSourceFile(file *os.File) (*Bible, error) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, err
+		return err
 	}
 
-	return b, nil
+	return nil
 }
 
 func (b *Bible) GetVerse(verse string) []Verse {
