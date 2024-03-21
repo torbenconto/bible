@@ -28,41 +28,39 @@ var compareCmd = &cobra.Command{
 		// Get the Bible from the context
 		ctxBible := util.GetFromContext(cmd.Context())
 
-		var targetBible = ctxBible
-
 		for _, version := range targetVersions {
 			if _, ok := versions.VersionMap[version]; !ok {
 				log.Fatalf("Version %s not found", version)
 			}
 
-			if targetBible.Version.Name != versions.VersionMap[version].Name {
-				newBible := bible.NewBible(versions.VersionMap[version])
+			var targetBible *bible.Bible
+			if ctxBible.Version.Name == version {
+				targetBible = ctxBible
+			} else {
+				targetBible = bible.NewBible(versions.VersionMap[version])
 
 				home, err := os.UserHomeDir()
 				if err != nil {
 					log.Fatal(err)
 				}
-				file, err := os.Open(filepath.Join(home, fmt.Sprintf(".bible/versions/%s/%s.txt", newBible.Version.Name, newBible.Version.Name)))
+				file, err := os.Open(filepath.Join(home, fmt.Sprintf(".bible/versions/%s/%s.txt", targetBible.Version.Name, targetBible.Version.Name)))
 				if err != nil {
 					if os.IsNotExist(err) {
-						log.Printf("Version %s not found locally", newBible.Version.Name)
+						log.Printf("Version %s not found locally", targetBible.Version.Name)
 						log.Println("Downloading the version")
-						config.InitVersion(newBible.Version)
+						config.InitVersion(targetBible.Version)
 
 						// Bad but only way to make it look clean
 						os.Exit(1)
 					}
 				}
 
-				err = newBible.LoadSourceFile(file)
+				err = targetBible.LoadSourceFile(file)
 				if err != nil {
 					log.Fatal(err)
 				}
-				targetBible = newBible
 			}
-		}
 
-		for _, version := range targetVersions {
 			verses := targetBible.GetVerse(verse)
 
 			if len(verses) == 0 {
